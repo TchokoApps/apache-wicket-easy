@@ -15,7 +15,7 @@ public class TestHomePage
 	@Before
 	public void setUp()
 	{
-		tester = new WicketTester(new WicketApplication());
+		tester = new WicketTester(new SpringbootWicketApplication());
 	}
 
 	@Test

@@ -5,7 +5,34 @@
 </head>
 <body>
 <wicket:extend>
-    <span class="categoryHeader">Hello Category</span>
+<!--    <span class="categoryHeader">Hello Category</span>-->
+    <h1>Categories RepeatingView</h1><br>
+    <ul>
+        <li wicket:id="categoryRepeatingView"></li>
+    </ul>
+    <h1>Categories ListView</h1><br>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr wicket:id="categoryListView">
+            <td wicket:id="nameListView">Name</td>
+            <td wicket:id="descriptionListView">Description</td>
+        </tr>
+    </table>
+    <h1>Categories DataView</h1><br>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr wicket:id="categoryDataView">
+            <td wicket:id="nameDataView">Name</td>
+            <td wicket:id="descriptionDataView">Description</td>
+        </tr>
+    </table>
+    <div wicket:id="navigator"></div>
 </wicket:extend>
 </body>
 </html>
