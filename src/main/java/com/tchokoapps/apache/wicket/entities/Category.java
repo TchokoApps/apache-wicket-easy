@@ -19,4 +19,12 @@ public class Category implements Serializable {
     private String description;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
     private List<Article> articles = new ArrayList<>();
+
+    public Category() {
+    }
+
+    public Category(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }
