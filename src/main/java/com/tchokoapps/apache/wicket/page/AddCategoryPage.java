@@ -3,26 +3,21 @@ package com.tchokoapps.apache.wicket.page;
 import com.tchokoapps.apache.wicket.entities.Category;
 import com.tchokoapps.apache.wicket.repositories.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-
-import java.util.Iterator;
+import org.apache.wicket.validation.validator.UrlValidator;
 
 @Slf4j
 public class AddCategoryPage extends BaseWebPage {
 
     private CategoryForm categoryForm;
     private CategoryLink categoryLink;
-    private String n;
-    private String d;
 
     @SpringBean
     CategoryRepository categoryRepository;
@@ -38,15 +33,21 @@ public class AddCategoryPage extends BaseWebPage {
         categoryLink = new CategoryLink("newCategory");
         add(categoryLink);
 
+        Category category = new Category();
+
         categoryForm= new CategoryForm("form");
-        categoryForm.add(new TextField<String>("name", new PropertyModel<>(this,"n")));
-        categoryForm.add(new TextField<String>("description", new PropertyModel<>(this,"d")));
+        categoryForm.setDefaultModel(new Model<Category>(category));
+        categoryForm.add(new TextField<String>("name", new PropertyModel<>(category,"name")).setRequired(true));
+        categoryForm.add(new TextField<String>("imgUrl", new PropertyModel<>(category,"imgUrl")).setRequired(true).add(new UrlValidator()));
+        categoryForm.add(new TextField<String>("description", new PropertyModel<>(category,"description")).setRequired(true));
         add(categoryForm);
 
         categoryForm.setVisible(false);
+
+        add(new FeedbackPanel("feedback"));
     }
 
-    private class CategoryForm extends Form<Void> {
+    private class CategoryForm extends Form<Category> {
         public CategoryForm(String id) {
             super(id);
         }
@@ -54,7 +55,8 @@ public class AddCategoryPage extends BaseWebPage {
         @Override
         protected void onSubmit() {
             super.onSubmit();
-            categoryRepository.save(new Category(n,d));
+            Category category = (Category) this.getDefaultModelObject();
+            categoryRepository.save(category);
             categoryForm.iterator().forEachRemaining(component -> component.setDefaultModelObject(""));
         }
     }

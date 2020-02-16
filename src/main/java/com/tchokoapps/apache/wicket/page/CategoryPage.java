@@ -1,9 +1,9 @@
 package com.tchokoapps.apache.wicket.page;
 
-import com.tchokoapps.apache.wicket.entities.Article;
 import com.tchokoapps.apache.wicket.entities.Category;
-import com.tchokoapps.apache.wicket.repositories.ArticleRepository;
 import com.tchokoapps.apache.wicket.repositories.CategoryRepository;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -21,9 +21,6 @@ public class CategoryPage extends BaseWebPage {
 
     @SpringBean
     CategoryRepository categoryRepository;
-
-    @SpringBean
-    ArticleRepository articleRepository;
 
     public CategoryPage(PageParameters parameters) {
         super(parameters);
@@ -44,6 +41,16 @@ public class CategoryPage extends BaseWebPage {
             @Override
             protected void populateItem(ListItem<Category> listItem) {
                 listItem.add(new Label("nameListView",listItem.getModelObject().getName()));
+
+                WebMarkupContainer imageWebMarkupContainer = new WebMarkupContainer("imageListView") {
+                    @Override
+                    protected void onComponentTag(ComponentTag tag) {
+                        super.onComponentTag(tag);
+                        tag.put("src", listItem.getModelObject().getImgUrl());
+                    }
+                };
+
+                listItem.add(imageWebMarkupContainer);
                 listItem.add(new Label("descriptionListView",listItem.getModelObject().getDescription()));
             }
         };
@@ -54,6 +61,16 @@ public class CategoryPage extends BaseWebPage {
             @Override
             protected void populateItem(Item<Category> item) {
                 item.add(new Label("nameDataView",item.getModelObject().getName()));
+
+                WebMarkupContainer imageWebMarkupContainer = new WebMarkupContainer("imageDataView") {
+                    @Override
+                    protected void onComponentTag(ComponentTag tag) {
+                        super.onComponentTag(tag);
+                        tag.put("src", item.getModelObject().getImgUrl());
+                    }
+                };
+
+                item.add(imageWebMarkupContainer);
                 item.add(new Label("descriptionDataView",item.getModelObject().getDescription()));
             }
         };

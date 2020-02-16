@@ -5,7 +5,7 @@
 </head>
 <body>
 <wicket:extend>
-<!--    <span class="categoryHeader">Hello Category</span>-->
+    <!--    <span class="categoryHeader">Hello Category</span>-->
     <h1>Categories RepeatingView</h1><br>
     <ul>
         <li wicket:id="categoryRepeatingView"></li>
@@ -14,10 +14,12 @@
     <table class="table">
         <tr>
             <th>Name</th>
+            <th>Image</th>
             <th>Description</th>
         </tr>
         <tr wicket:id="categoryListView">
             <td wicket:id="nameListView">Name</td>
+            <td><img wicket:id="imageListView"  height="50px" width="50px"/></td>
             <td wicket:id="descriptionListView">Description</td>
         </tr>
     </table>
@@ -25,10 +27,12 @@
     <table class="table">
         <tr>
             <th>Name</th>
+            <th>Image</th>
             <th>Description</th>
         </tr>
         <tr wicket:id="categoryDataView">
             <td wicket:id="nameDataView">Name</td>
+            <td><img wicket:id="imageDataView" height="50px" width="50px"/></td>
             <td wicket:id="descriptionDataView">Description</td>
         </tr>
     </table>

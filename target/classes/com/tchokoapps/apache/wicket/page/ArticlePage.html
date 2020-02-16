@@ -6,6 +6,73 @@
 </head>
 <body>
 <wicket:extend>
+    <div class="row">
+        <div class="col-12">
+            <h1>Articles</h1>
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>CreatedAt</th>
+                    <th>Image</th>
+                    <th>Category</th>
+                </tr>
+                <tr wicket:id="articles">
+                    <td wicket:id="name"></td>
+                    <td wicket:id="description"></td>
+                    <td wicket:id="price"></td>
+                    <td wicket:id="createdAt"></td>
+                    <td>
+                        <img wicket:id="image" height="50px" width="50px"/>
+                    </td>
+                    <td wicket:id="catName"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div wicket:id="navigator"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <button wicket:id="newArticle" class="btn">Create new 'item'</button>
+        </div>
+    </div>
+    <div wicket:id="feedback"></div>
+    <form wicket:id="form">
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Name</label>
+            <input type="text" class="col-9 form-control" wicket:id="name">
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Description</label>
+            <textarea type="text" class="col-9 form-control" wicket:id="description"></textarea>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Price</label>
+            <input class="col-9 form-control" wicket:id="price">
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">CreatedAt</label>
+            <input type="date" class="col-9 form-control" wicket:id="createdAt">
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Image-URL</label>
+            <input type="text" class="col-9 form-control" wicket:id="imageUrl">
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Category</label>
+            <input type="text" class="col-9 form-control" wicket:id="catName">
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <input type="submit" value="Save Item" class="btn btn-primary">
+            </div>
+        </div>
+    </form>
 </wicket:extend>
 </body>
 </html>

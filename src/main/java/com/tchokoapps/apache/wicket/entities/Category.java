@@ -16,6 +16,7 @@ public class Category implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String imgUrl;
     private String description;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
     private List<Article> articles = new ArrayList<>();
@@ -23,8 +24,9 @@ public class Category implements Serializable {
     public Category() {
     }
 
-    public Category(String name, String description) {
+    public Category(String name, String imgUrl, String description) {
         this.name = name;
+        this.imgUrl = imgUrl;
         this.description = description;
     }
 }
