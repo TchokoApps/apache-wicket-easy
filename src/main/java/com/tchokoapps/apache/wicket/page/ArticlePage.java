@@ -5,7 +5,6 @@ import com.tchokoapps.apache.wicket.entities.Category;
 import com.tchokoapps.apache.wicket.repositories.ArticleRepository;
 import com.tchokoapps.apache.wicket.repositories.CategoryRepository;
 import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTextField;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -23,15 +22,12 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.apache.wicket.validation.validator.UrlValidator;
-import org.hibernate.validator.internal.constraintvalidators.hv.URLValidator;
 
 import java.math.BigDecimal;
-import java.time.format.FormatStyle;
 import java.util.Iterator;
 import java.util.Optional;
+
 
 public class ArticlePage extends BaseWebPage {
 
@@ -58,7 +54,7 @@ public class ArticlePage extends BaseWebPage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        articleDataView.setItemsPerPage(3);
+        articleDataView.setItemsPerPage(5);
         final PagingNavigator navigator = new PagingNavigator("navigator", articleDataView);
         add(navigator);
         add(articleDataView);

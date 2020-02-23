@@ -2,6 +2,7 @@ package com.tchokoapps.apache.wicket;
 
 import com.tchokoapps.apache.wicket.page.HomePage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.wicket.bean.validation.BeanValidationConfiguration;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -30,6 +31,7 @@ public class SpringbootWicketApplication extends WebApplication {
     @Override
     public void init() {
         super.init();
+        new BeanValidationConfiguration().configure(this );
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
     }
 }
