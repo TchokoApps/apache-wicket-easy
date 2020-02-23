@@ -1,6 +1,8 @@
 package com.tchokoapps.apache.wicket.page;
 
 import com.tchokoapps.apache.wicket.entities.Category;
+import com.tchokoapps.apache.wicket.feedback.ValidationErrorFeedbackPanel;
+import com.tchokoapps.apache.wicket.feedback.ValidationSuccessFeedbackPanel;
 import com.tchokoapps.apache.wicket.repositories.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -29,7 +31,8 @@ public class AddCategoryPage extends BaseWebPage {
 
     @SpringBean
     CategoryRepository categoryRepository;
-    private FeedbackPanel feedback;
+    private ValidationErrorFeedbackPanel errorFeedback;
+    private ValidationSuccessFeedbackPanel successFeedback;
 
     public AddCategoryPage(PageParameters parameters) {
         super(parameters);
@@ -46,15 +49,18 @@ public class AddCategoryPage extends BaseWebPage {
 
         categoryForm= new CategoryForm("form");
         categoryForm.setDefaultModel(new Model<Category>(category));
-        categoryForm.add(new TextField<String>("name", new PropertyModel<>(category,"name")).add(new PropertyValidator<>()).setRequired(true).add(new UniqueCategoryNameValidator()));
-        categoryForm.add(new TextField<String>("imgUrl", new PropertyModel<>(category,"imgUrl")).add(new PropertyValidator<>()).setRequired(true).add(new UrlValidator()));
+        categoryForm.add(new TextField<String>("name", new PropertyModel<>(category,"name")).add(new PropertyValidator<>()).add(new UniqueCategoryNameValidator()));
+        categoryForm.add(new TextField<String>("imgUrl", new PropertyModel<>(category,"imgUrl")).add(new PropertyValidator<>()));
         categoryForm.add(new TextField<String>("description", new PropertyModel<>(category,"description")).add(new PropertyValidator<>()).setRequired(true));
         add(categoryForm);
 
         categoryForm.setVisible(false);
 
-        feedback = new FeedbackPanel("feedback");
-        add(feedback);
+        errorFeedback = new ValidationErrorFeedbackPanel("errorFeedback");
+        successFeedback = new ValidationSuccessFeedbackPanel("successFeedback");
+
+        add(errorFeedback);
+        add(successFeedback);
     }
 
     private class CategoryForm extends Form<Category> {
@@ -68,6 +74,10 @@ public class AddCategoryPage extends BaseWebPage {
             Category category = (Category) this.getDefaultModelObject();
             categoryRepository.save(category);
             categoryForm.iterator().forEachRemaining(component -> component.setDefaultModelObject(""));
+            categoryForm.success("The new category has been successfully saved");
+
+            successFeedback.add(new AttributeAppender("class", "alert alert-success"));
+            successFeedback.add(new AttributeAppender("role", "alert"));
         }
     }
 
@@ -93,9 +103,8 @@ public class AddCategoryPage extends BaseWebPage {
                 validationError.setVariable("suggestedCategory", "Weine");
                 validable.error(validationError);
 
-                Component feedbackul = feedback.get("feedbackul");
-                feedbackul.add(new AttributeAppender("class", "alert alert-danger"));
-                feedbackul.add(new AttributeAppender("role", "alert"));
+                errorFeedback.add(new AttributeAppender("class", "alert alert-danger"));
+                errorFeedback.add(new AttributeAppender("role", "alert"));
             }
         }
     }

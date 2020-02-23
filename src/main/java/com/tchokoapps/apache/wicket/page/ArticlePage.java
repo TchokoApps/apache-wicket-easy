@@ -4,13 +4,12 @@ import com.tchokoapps.apache.wicket.entities.Article;
 import com.tchokoapps.apache.wicket.entities.Category;
 import com.tchokoapps.apache.wicket.repositories.ArticleRepository;
 import com.tchokoapps.apache.wicket.repositories.CategoryRepository;
+import org.apache.wicket.bean.validation.PropertyValidator;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -26,6 +25,7 @@ import org.apache.wicket.validation.validator.RangeValidator;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -66,14 +66,15 @@ public class ArticlePage extends BaseWebPage {
 
     private void initializeArticleForm() {
         Article article = new Article();
-        articleForm.setVisible(false);
+        articleForm.setVisible(true);
         articleForm.setDefaultModel(Model.of(article));
         articleForm.add(new TextField<Article>("name", new PropertyModel<>(article, "name")).setRequired(true));
         articleForm.add(new TextArea<Article>("description", new PropertyModel<>(article, "description")).setRequired(true));
         articleForm.add(new TextField<Article>("price", new PropertyModel<>(article, "price")).setRequired(true).add(new RangeValidator<BigDecimal>(BigDecimal.ZERO, BigDecimal.valueOf(100))));
-//        articleForm.add(new LocalDateTextField("createdAt", new PropertyModel<>(article, "createdAt"), FormatStyle.SHORT));
         articleForm.add(new TextField<Article>("imageUrl", new PropertyModel<>(article, "imgUrl")).setRequired(true));
-        articleForm.add(new TextField<Article>("catName", new PropertyModel<>(article, "category.name")).setRequired(true));
+        List<Category> categories = categoryRepository.findAll();
+        DropDownChoice<Category> categoryDropDownChoice = new DropDownChoice<>("category", categories, new ChoiceRenderer<>("name", "id"));
+        articleForm.add(categoryDropDownChoice);
     }
 
     private class ArticleForm extends Form<Article> {
@@ -84,7 +85,6 @@ public class ArticlePage extends BaseWebPage {
         @Override
         protected void onSubmit() {
             super.onSubmit();
-//            getRootForm().setVisible(false);
             Article article = this.getModelObject();
             Optional<Category> categoryOptional = categoryRepository.findCategoryByName(article.getCategory().getName());
             if (categoryOptional.isPresent()) {
