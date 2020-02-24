@@ -2,9 +2,10 @@ package com.tchokoapps.apache.wicket.page;
 
 import com.tchokoapps.apache.wicket.entities.Article;
 import com.tchokoapps.apache.wicket.entities.Category;
+import com.tchokoapps.apache.wicket.feedback.ValidationErrorFeedbackPanel;
+import com.tchokoapps.apache.wicket.feedback.ValidationSuccessFeedbackPanel;
 import com.tchokoapps.apache.wicket.repositories.ArticleRepository;
 import com.tchokoapps.apache.wicket.repositories.CategoryRepository;
-import org.apache.wicket.bean.validation.PropertyValidator;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -12,7 +13,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -26,7 +26,6 @@ import org.apache.wicket.validation.validator.RangeValidator;
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 
 public class ArticlePage extends BaseWebPage {
@@ -41,6 +40,8 @@ public class ArticlePage extends BaseWebPage {
     private final DataView<Article> articleDataView;
     private final ArticleForm articleForm;
     private final ArticleLink articleLink;
+    private ValidationErrorFeedbackPanel errorFeedback;
+    private ValidationSuccessFeedbackPanel successFeedback;
 
     public ArticlePage(PageParameters parameters) {
         super(parameters);
@@ -59,21 +60,22 @@ public class ArticlePage extends BaseWebPage {
         add(navigator);
         add(articleDataView);
         add(articleLink);
-        add(new FeedbackPanel("feedback"));
+        add(errorFeedback = new ValidationErrorFeedbackPanel("errorFeedback"));
+        add(successFeedback = new ValidationSuccessFeedbackPanel("successFeedback"));
         initializeArticleForm();
         add(articleForm);
     }
 
     private void initializeArticleForm() {
         Article article = new Article();
-        articleForm.setVisible(true);
+        articleForm.setVisible(false);
         articleForm.setDefaultModel(Model.of(article));
         articleForm.add(new TextField<Article>("name", new PropertyModel<>(article, "name")).setRequired(true));
         articleForm.add(new TextArea<Article>("description", new PropertyModel<>(article, "description")).setRequired(true));
         articleForm.add(new TextField<Article>("price", new PropertyModel<>(article, "price")).setRequired(true).add(new RangeValidator<BigDecimal>(BigDecimal.ZERO, BigDecimal.valueOf(100))));
         articleForm.add(new TextField<Article>("imageUrl", new PropertyModel<>(article, "imgUrl")).setRequired(true));
         List<Category> categories = categoryRepository.findAll();
-        DropDownChoice<Category> categoryDropDownChoice = new DropDownChoice<>("category", categories, new ChoiceRenderer<>("name", "id"));
+        DropDownChoice<Category> categoryDropDownChoice = new DropDownChoice<>("category", new PropertyModel<>(article, "category"), categories, new ChoiceRenderer<>("name", "id"));
         articleForm.add(categoryDropDownChoice);
     }
 
@@ -86,17 +88,10 @@ public class ArticlePage extends BaseWebPage {
         protected void onSubmit() {
             super.onSubmit();
             Article article = this.getModelObject();
-            Optional<Category> categoryOptional = categoryRepository.findCategoryByName(article.getCategory().getName());
-            if (categoryOptional.isPresent()) {
-                Category category = categoryOptional.get();
-                article.setCategory(category);
-                articleRepository.save(article);
-            } else {
-                throw new RuntimeException("Category with name " + article.getCategory().getName() + " doesn´t exist!");
-            }
-
-            this.iterator().forEachRemaining(component -> component.setDefaultModelObject(null));
-            this.setDefaultModelObject(new Article());
+            articleRepository.save(article);
+            iterator().forEachRemaining(component -> component.setDefaultModelObject(null));
+            setDefaultModelObject(new Article());
+            success("New article successfully saved");
         }
     }
 

@@ -41,7 +41,8 @@
             <button wicket:id="newArticle" class="btn">Create new 'item'</button>
         </div>
     </div>
-    <div wicket:id="feedback"></div>
+    <div wicket:id="errorFeedback"></div>
+    <div wicket:id="successFeedback"></div>
     <form wicket:id="form">
         <div class="form-group row">
             <label class="col-3 col-form-label">Name</label>
@@ -55,10 +56,6 @@
             <label class="col-3 col-form-label">Price</label>
             <input class="col-9 form-control" wicket:id="price">
         </div>
-<!--        <div class="form-group row">-->
-<!--            <label class="col-3 col-form-label">CreatedAt</label>-->
-<!--            <input type="text" class="col-9 form-control" wicket:id="createdAt">-->
-<!--        </div>-->
         <div class="form-group row">
             <label class="col-3 col-form-label">Image-URL</label>
             <input type="text" class="col-9 form-control" wicket:id="imageUrl">
