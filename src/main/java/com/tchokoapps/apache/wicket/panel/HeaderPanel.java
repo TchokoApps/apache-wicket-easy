@@ -1,5 +1,6 @@
 package com.tchokoapps.apache.wicket.panel;
 
+import com.tchokoapps.apache.wicket.modalwindow.ShowModalWindowPage;
 import com.tchokoapps.apache.wicket.page.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,6 +18,7 @@ public class HeaderPanel extends Panel {
     private final BookmarkablePageLink<Void> tableLink;
     private final BookmarkablePageLink<Void> dashboardLink;
     private final BookmarkablePageLink<Void> addCategoryLink;
+    private final BookmarkablePageLink<Void> showModalWindowLink;
 
     public HeaderPanel(String id) {
         super(id);
@@ -26,12 +28,14 @@ public class HeaderPanel extends Panel {
         tableLink = new BookmarkablePageLink<Void>("tables", TablePage.class);
         dashboardLink = new BookmarkablePageLink<Void>("dashboard", getWebApplication().getHomePage());
         addCategoryLink = new BookmarkablePageLink<Void>("addCategory", AddCategoryPage.class);
+        showModalWindowLink = new BookmarkablePageLink<Void>("showModalWindow", ShowModalWindowPage.class);
 
         add(dashboardLink);
         add(categoryLink);
         add(articleLink);
         add(tableLink);
         add(addCategoryLink);
+        add(showModalWindowLink);
 
 //        add(new Image("brand",new LogoResourceReference()));
         add(new ContextImage("brand", "sg-logo.png"));
